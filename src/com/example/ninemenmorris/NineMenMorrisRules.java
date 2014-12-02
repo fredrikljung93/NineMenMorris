@@ -1,5 +1,7 @@
 package com.example.ninemenmorris;
 
+import android.util.Log;
+
 
 /**
  * @author Jonas Wåhslén, jwi@kth.se. Revised by Anders Lindström,
@@ -184,7 +186,7 @@ public class NineMenMorrisRules {
 			return false;
 	}
 
-	/**
+	/** DEPRECATED
 	 * Returns true if the selected player have less than three markerss left.
 	 */
 	public boolean win(int color) {
@@ -195,10 +197,30 @@ public class NineMenMorrisRules {
 				countMarker++;
 			count++;
 		}
-		if (bluemarker <= 0 && redmarker <= 0 && countMarker < 3)
-			return true;
-		else
-			return false;
+		if (bluemarker <= 0 && redmarker <= 0 && countMarker < 3){
+			Log.d("NMMR win", color+ "true");
+			return true;}
+		else{
+			Log.d("NMMR win", color+ "false");
+			return false;}
+	}
+	
+	/**
+	 * Returns true if the selected player have less than three markerss left.
+	 */
+	public boolean loss(int color) {
+		int marker=BLUE_MARKER;
+		if(color==RED_MOVES){
+			marker=RED_MARKER;
+		}
+		int counter=0;
+		for(int i=1;i<=24;i++){
+			if(gameplan[i]==marker){
+				counter++;
+			}
+		}
+		
+		return (counter<3);
 	}
 
 	/**

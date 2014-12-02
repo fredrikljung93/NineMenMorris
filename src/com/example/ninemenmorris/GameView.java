@@ -11,15 +11,17 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.os.Vibrator;
+
 public class GameView extends View {
 	public static final int BLUE_MOVES = 1;
 	public static final int RED_MOVES = 2;
-	public static final int OUT_OF_BOUNDS=1337;
+	public static final int OUT_OF_BOUNDS = 1337;
 	public static final int EMPTY_SPACE = 0;
 	public static final int BLUE_MARKER = 4;
 	public static final int RED_MARKER = 5;
-	boolean timeToRemoveMarker=false;
-	int marked=0;
+	boolean timeToRemoveMarker = false;
+	int winner = 0;
+	int marked = 0;
 	Vibrator v;
 	NineMenMorrisRules game;
 	Rect[] points;
@@ -28,6 +30,7 @@ public class GameView extends View {
 	Rect medium;
 	Rect small;
 	ArrayList<Rect> lines;
+
 	public GameView(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
@@ -37,8 +40,6 @@ public class GameView extends View {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		Log.i("TouchView.onTouchEvent", "event = " + event);
-
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			boolean pressedPoint = false;
 			for (int i = 1; i <= 24; i++) {
@@ -48,8 +49,8 @@ public class GameView extends View {
 					break;
 				}
 			}
-			if(pressedPoint){
-				 v.vibrate(50);
+			if (pressedPoint) {
+				v.vibrate(50);
 			}
 			invalidate(); // RIta om
 			return true;
@@ -61,47 +62,52 @@ public class GameView extends View {
 	private void handleTouch(int pressedPoint) {
 		int player = game.getTurn();
 		int marker = game.getMarker(player);
-		boolean success=false;
-		
-		if(timeToRemoveMarker){
-			switch(player){
+		boolean success = false;
+
+		if (timeToRemoveMarker) {
+			switch (player) {
 			case RED_MOVES:
-				success=game.remove(pressedPoint, RED_MARKER);
+				success = game.remove(pressedPoint, RED_MARKER);
 				break;
-				
+
 			case BLUE_MOVES:
-				success=game.remove(pressedPoint, BLUE_MARKER);
+				success = game.remove(pressedPoint, BLUE_MARKER);
 				break;
 			}
-			
-			timeToRemoveMarker=!success;
+
+			timeToRemoveMarker = !success;
+
+			if (game.loss(BLUE_MOVES)) {
+				winner = RED_MOVES;
+				Log.d("Winner", "RED SET TO WINNER");
+			} else if (game.loss(RED_MOVES)) {
+				winner=BLUE_MOVES;
+				Log.d("Winner", "BLUE SET TO WINNER");
+			}
 			return;
 		}
-		
-		if(marker>0){
-			success=game.legalMove(pressedPoint,OUT_OF_BOUNDS, player);
+
+		if (marker > 0) {
+			success = game.legalMove(pressedPoint, OUT_OF_BOUNDS, player);
 		}
-		
-		if(marked==0){
-			marked=pressedPoint;
+
+		if (marked == 0) {
+			marked = pressedPoint;
 			return;
-		}
-		else{
-			if(marked==pressedPoint){
-				marked=0;
+		} else {
+			if (marked == pressedPoint) {
+				marked = 0;
 				return;
 			}
-			
-			success=game.legalMove(pressedPoint, marked, player);
-			marked=0;
+
+			success = game.legalMove(pressedPoint, marked, player);
+			marked = 0;
 		}
-		
-		
-		
-		if(game.remove(pressedPoint)){
-			timeToRemoveMarker=true;
+
+		if (game.remove(pressedPoint)) {
+			timeToRemoveMarker = true;
 		}
-		
+
 	}
 
 	@Override
@@ -118,21 +124,20 @@ public class GameView extends View {
 		// Background
 		Paint blackPaint = new Paint();
 		blackPaint.setColor(Color.BLACK);
-		
+
 		Paint markedBorder = new Paint();
 		markedBorder.setColor(Color.MAGENTA);
 		markedBorder.setStyle(Paint.Style.STROKE);
-		
+
 		Paint redPaint = new Paint();
 		redPaint.setColor(Color.RED);
-		
+
 		Paint bluePaint = new Paint();
 		bluePaint.setColor(Color.BLUE);
 
 		Paint darkGreenPaint = new Paint();
-		darkGreenPaint.setColor(Color.argb(255, 0,130, 0));
-		
-		
+		darkGreenPaint.setColor(Color.argb(255, 0, 130, 0));
+
 		Paint darkGrayPaint = new Paint();
 		darkGrayPaint.setColor(Color.DKGRAY);
 
@@ -146,7 +151,7 @@ public class GameView extends View {
 
 		for (int i = 1; i <= 24; i++) {
 			int point = game.board(i);
-			switch(point){
+			switch (point) {
 			case RED_MARKER:
 				canvas.drawRect(points[i], redPaint);
 				break;
@@ -156,37 +161,45 @@ public class GameView extends View {
 			default:
 				canvas.drawRect(points[i], darkGrayPaint);
 			}
-			if(marked==i){
-				canvas.drawRect(points[i],markedBorder);
+			if (marked == i) {
+				canvas.drawRect(points[i], markedBorder);
 			}
 		}
 		blackPaint.setTextSize(30);
-		int turn=game.getTurn();
-		String turnmessage= "REDS TURN";
-		if(turn==BLUE_MOVES){
-			turnmessage="BLUES TURN";
+		int turn = game.getTurn();
+		String turnmessage = "REDS TURN";
+		if (turn == BLUE_MOVES) {
+			turnmessage = "BLUES TURN";
 		}
-		String statistics="R: "+game.getMarker(RED_MOVES)+", B: "+game.getMarker(BLUE_MOVES);
-		if(timeToRemoveMarker){
-			switch(turn){
+		String statistics = "R: " + game.getMarker(RED_MOVES) + ", B: "
+				+ game.getMarker(BLUE_MOVES);
+		if (timeToRemoveMarker) {
+			switch (turn) {
 			case BLUE_MOVES:
-				turnmessage="RED, REMOVE A BLUE MARKER";
+				turnmessage = "RED, REMOVE A BLUE MARKER";
 				break;
 			case RED_MOVES:
-				turnmessage="BLUE, REMOVE A RED MARKER";
+				turnmessage = "BLUE, REMOVE A RED MARKER";
 				break;
 			}
 		}
-		canvas.drawText(turnmessage, notGamePlan.left, notGamePlan.top+30, blackPaint);
-		canvas.drawText(statistics, notGamePlan.left, notGamePlan.bottom, blackPaint);
+		if (winner == BLUE_MOVES) {
+			turnmessage = "BLUE WON THE GAME";
+		} else if (winner == RED_MOVES) {
+			turnmessage = "RED WON THE GAME";
+		}
+		canvas.drawText(turnmessage, notGamePlan.left, notGamePlan.top + 30,
+				blackPaint);
+		canvas.drawText(statistics, notGamePlan.left, notGamePlan.bottom,
+				blackPaint);
 
 	}
 
 	private void createRects() {
-		boolean landscape=false;
+		boolean landscape = false;
 		int width = this.getWidth();
 		if (this.getHeight() < width) {
-			landscape=true;
+			landscape = true;
 			width = this.getHeight();
 		}
 		int top = 0;
@@ -194,19 +207,20 @@ public class GameView extends View {
 		int left = 0;
 		int right = width;
 		int smallWidth = width / 3;
-		
-		//left top, right bottom
+
+		// left top, right bottom
 		big = new Rect(left, top, right, bottom);
 		medium = new Rect(smallWidth / 2, smallWidth / 2, (width - smallWidth)
 				+ (smallWidth / 2), (width - smallWidth) + (smallWidth / 2));
 		small = new Rect(smallWidth, smallWidth, width - smallWidth, width
 				- smallWidth);
-		
-		if(landscape){
-		notGamePlan=new Rect(big.right,0,this.getWidth(),this.getHeight());
-		}
-		else{
-			notGamePlan=new Rect(0,big.bottom,this.getWidth(),this.getHeight());
+
+		if (landscape) {
+			notGamePlan = new Rect(big.right, 0, this.getWidth(),
+					this.getHeight());
+		} else {
+			notGamePlan = new Rect(0, big.bottom, this.getWidth(),
+					this.getHeight());
 		}
 		int pointWidth = smallWidth / 4;
 		points[1] = new Rect(small.left, small.top, small.left + pointWidth,
@@ -339,7 +353,7 @@ public class GameView extends View {
 	}
 
 	public void setNineMenMorrisRules(NineMenMorrisRules game) {
-		this.game=game;
+		this.game = game;
 	}
 
 }
