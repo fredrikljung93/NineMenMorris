@@ -192,7 +192,7 @@ public class NineMenMorrisRules {
 	 */
 	private boolean isValidMove(int to, int from) {
 		
-		if(to != EMPTY_SPACE) return false;
+		if (this.gameplan[to] != EMPTY_SPACE) return false;
 		
 		switch (to) {
 		case 1:
