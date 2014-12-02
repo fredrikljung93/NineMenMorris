@@ -1,5 +1,7 @@
 package com.example.ninemenmorris;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -60,8 +62,8 @@ public class GameView extends View {
 		Log.i("TouchView.onDraw", "");
 		
 		// Background
-		Paint bgPaint = new Paint();
-		bgPaint.setColor(Color.BLACK);
+		Paint blackPaint = new Paint();
+		blackPaint.setColor(Color.BLACK);
 		
 		Paint bluePaint = new Paint();
 		bluePaint.setColor(Color.BLUE);
@@ -81,7 +83,33 @@ public class GameView extends View {
 		canvas.drawRect(medium,greenPaint);
 		canvas.drawRect(small,redPaint);
 		
+		int lineWidth=points[1].width()/3;
+		ArrayList<Rect> lines = new ArrayList<Rect>();
 		
+		//verticals
+		lines.add(new Rect(points[3].centerX()-(lineWidth/2), points[3].top,points[21].centerX()-(lineWidth/2)+lineWidth, points[21].bottom));
+		lines.add(new Rect(points[3].centerX()-(lineWidth/2), points[3].top,points[21].centerX()-(lineWidth/2)+lineWidth, points[21].bottom));
+		lines.add(new Rect(points[9].centerX()-(lineWidth/2), points[9].top,points[15].centerX()-(lineWidth/2)+lineWidth, points[15].bottom));
+		lines.add(new Rect(points[2].centerX()-(lineWidth/2), points[2].top,points[20].centerX()-(lineWidth/2)+lineWidth, points[20].bottom));
+		lines.add(new Rect(points[7].centerX()-(lineWidth/2), points[7].top,points[13].centerX()-(lineWidth/2)+lineWidth, points[13].bottom));
+		lines.add(new Rect(points[6].centerX()-(lineWidth/2), points[6].top,points[4].centerX()-(lineWidth/2)+lineWidth, points[4].bottom));
+		lines.add(new Rect(points[16].centerX()-(lineWidth/2), points[16].top,points[18].centerX()-(lineWidth/2)+lineWidth, points[18].bottom));
+		lines.add(new Rect(points[1].centerX()-(lineWidth/2), points[1].top,points[19].centerX()-(lineWidth/2)+lineWidth, points[19].bottom));
+		lines.add(new Rect(points[8].centerX()-(lineWidth/2), points[8].top,points[14].centerX()-(lineWidth/2)+lineWidth, points[14].bottom));
+		
+		
+		//horisontals
+		lines.add(new Rect(points[3].centerX(),points[3].centerY()-(lineWidth/2),points[9].centerX(),points[9].centerY()+(lineWidth/2)));
+		lines.add(new Rect(points[2].centerX(),points[2].centerY()-(lineWidth/2),points[8].centerX(),points[8].centerY()+(lineWidth/2)));
+		lines.add(new Rect(points[1].centerX(),points[1].centerY()-(lineWidth/2),points[7].centerX(),points[7].centerY()+(lineWidth/2)));
+		lines.add(new Rect(points[19].centerX(),points[19].centerY()-(lineWidth/2),points[13].centerX(),points[13].centerY()+(lineWidth/2)));
+		lines.add(new Rect(points[24].centerX(),points[24].centerY()-(lineWidth/2),points[22].centerX(),points[22].centerY()+(lineWidth/2)));
+		lines.add(new Rect(points[10].centerX(),points[10].centerY()-(lineWidth/2),points[12].centerX(),points[12].centerY()+(lineWidth/2)));
+		lines.add(new Rect(points[20].centerX(),points[20].centerY()-(lineWidth/2),points[14].centerX(),points[14].centerY()+(lineWidth/2)));
+		lines.add(new Rect(points[21].centerX(),points[21].centerY()-(lineWidth/2),points[15].centerX(),points[15].centerY()+(lineWidth/2)));
+		for(Rect line:lines){
+			canvas.drawRect(line, blackPaint);
+		}
 		
 		for(int i=1;i<=24;i++){
 			if(points[i]!=null){
