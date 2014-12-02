@@ -29,12 +29,30 @@ public class GameView extends View {
 	Rect medium;
 	Rect small;
 	ArrayList<Rect> lines;
+	Paint blackPaint = new Paint();
+	Paint markedBorder = new Paint();
+	Paint redPaint = new Paint();
+	Paint bluePaint = new Paint();
+	Paint darkGreenPaint = new Paint();
+	Paint darkGrayPaint = new Paint();
+	Paint magentaPaint = new Paint();
+
 
 	public GameView(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
 		points = new Rect[25];
 		v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+		
+		blackPaint.setColor(Color.BLACK);
+		markedBorder.setColor(Color.MAGENTA);
+		markedBorder.setStyle(Paint.Style.STROKE);
+		redPaint.setColor(Color.RED);
+		bluePaint.setColor(Color.BLUE);
+		darkGreenPaint.setColor(Color.argb(255, 0, 130, 0));
+		darkGrayPaint.setColor(Color.DKGRAY);
+		magentaPaint.setColor(Color.MAGENTA);
+
 	}
 
 	@Override
@@ -181,29 +199,6 @@ public class GameView extends View {
 		}
 
 		Log.i("TouchView.onDraw", "");
-
-		// Background
-		Paint blackPaint = new Paint();
-		blackPaint.setColor(Color.BLACK);
-
-		Paint markedBorder = new Paint();
-		markedBorder.setColor(Color.MAGENTA);
-		markedBorder.setStyle(Paint.Style.STROKE);
-
-		Paint redPaint = new Paint();
-		redPaint.setColor(Color.RED);
-
-		Paint bluePaint = new Paint();
-		bluePaint.setColor(Color.BLUE);
-
-		Paint darkGreenPaint = new Paint();
-		darkGreenPaint.setColor(Color.argb(255, 0, 130, 0));
-
-		Paint darkGrayPaint = new Paint();
-		darkGrayPaint.setColor(Color.DKGRAY);
-
-		Paint magentaPaint = new Paint();
-		magentaPaint.setColor(Color.MAGENTA);
 		canvas.drawRect(big, darkGreenPaint);
 
 		for (Rect line : lines) {
