@@ -5,12 +5,7 @@ import android.util.Log;
 /**
  * @author Jonas Wåhslén, jwi@kth.se. Revised by Anders Lindström,
  *         anderslm@kth.se
- */
-
-/*
- * The game board positions
- * 
- * 03 06 09 02 05 08 01 04 07 24 23 22 10 11 12 19 16 13 20 17 14 21 18 15
+ *         Updated by Jonas Andersson, jonand4@kth.se & Fredrik Ljung, frljung@kth.se
  */
 
 public class NineMenMorrisRules {
@@ -190,6 +185,7 @@ public class NineMenMorrisRules {
 	 * DEPRECATED Returns true if the selected player have less than three
 	 * markerss left.
 	 */
+	@Deprecated
 	public boolean win(int color) {
 		int countMarker = 0;
 		int count = 0;
@@ -208,7 +204,9 @@ public class NineMenMorrisRules {
 	}
 
 	/**
-	 * Returns true if the selected player have less than three markerss left.
+	 * Returns true if the selected player have any possible moves left
+	 * @param player The possibly movable player
+	 * @return true if player can move, false if it cannot move
 	 */
 
 	public boolean canMove(int player) {
@@ -396,17 +394,22 @@ public class NineMenMorrisRules {
 		return false; // Did not find any legal move
 	}
 
-	public boolean loss(int color) {
+	/**
+	 * Checks whether the player has too few markers left or not
+	 * @param player The player with possibly to few players
+	 * @return True if too few markers, false if not
+	 */
+	public boolean tooFewMarkers(int player) {
 		int marker = BLUE_MARKER;
-		if (color == RED_MOVES) {
+		if (player == RED_MOVES) {
 			marker = RED_MARKER;
 		}
 
-		if (color == BLUE_MOVES && bluemarker > 0) { // Cannot lose if markers
+		if (player == BLUE_MOVES && bluemarker > 0) { // Cannot lose if markers
 														// left
 			return false;
 		}
-		if (color == RED_MOVES && redmarker > 0) {
+		if (player == RED_MOVES && redmarker > 0) {
 			return false;
 		}
 

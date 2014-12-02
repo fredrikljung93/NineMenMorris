@@ -39,7 +39,7 @@ public class GameView extends View {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		if(game.getWinner()!=0){ // Do nothing if winner is annonced
+		if (game.getWinner() != 0) { // Do nothing if winner is annonced
 			return false;
 		}
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -61,6 +61,12 @@ public class GameView extends View {
 		return false;
 	}
 
+	/**
+	 * Handles a touch on one of the 24 points
+	 * 
+	 * @param pressedPoint
+	 *            Point Number
+	 */
 	private void handleTouch(int pressedPoint) {
 		int player = game.getTurn();
 		int playerMatchingMarker = RED_MARKER;
@@ -74,10 +80,10 @@ public class GameView extends View {
 			success = game.remove(pressedPoint, playerMatchingMarker);
 			timeToRemoveMarker = !success;
 
-			if (game.loss(BLUE_MOVES)) {
+			if (game.tooFewMarkers(BLUE_MOVES)) {
 				game.setWinner(RED_MOVES);
 				Log.d("Winner", "RED SET TO WINNER");
-			} else if (game.loss(RED_MOVES)) {
+			} else if (game.tooFewMarkers(RED_MOVES)) {
 				game.setWinner(BLUE_MOVES);
 				Log.d("Winner", "BLUE SET TO WINNER");
 			}
@@ -87,7 +93,7 @@ public class GameView extends View {
 
 		if (marker > 0) { // If player has unplaced markers
 			success = game.legalMove(pressedPoint, OUT_OF_BOUNDS, player);
-			checkMoveResult(pressedPoint,player);
+			checkMoveResult(pressedPoint, player);
 			return;
 		}
 
@@ -96,57 +102,71 @@ public class GameView extends View {
 			return;
 		}
 
-		if (marked == pressedPoint) { // If player touches marked point, unmark it
+		if (marked == pressedPoint) { // If player touches marked point, unmark
+										// it
 			marked = 0;
 			return;
 		}
-		
-		if(!(game.board(marked)==playerMatchingMarker)){ // If try to move opponents points
-			Log.d("NAUGHTYMOVE", "Pressed "+pressedPoint+" with "+marked+ " marked as player "+player);
-			marked=0;
+
+		if (!(game.board(marked) == playerMatchingMarker)) { // If try to move
+																// opponents
+																// points
+			Log.d("NAUGHTYMOVE", "Pressed " + pressedPoint + " with " + marked
+					+ " marked as player " + player);
+			marked = 0;
 			return;
 		}
-		if(game.board(pressedPoint)!=EMPTY_SPACE){ // If try to move where there already is a marker
-			Log.d("NAUGHTYMOVE", "Pressed "+pressedPoint+" with "+marked+ " marked as player "+player);
-			marked=0;
+		if (game.board(pressedPoint) != EMPTY_SPACE) { // If try to move where
+														// there already is a
+														// marker
+			Log.d("NAUGHTYMOVE", "Pressed " + pressedPoint + " with " + marked
+					+ " marked as player " + player);
+			marked = 0;
 			return;
 		}
 
 		success = game.legalMove(pressedPoint, marked, player);
-		Log.d("GameView", "Move success= "+success);
+		Log.d("GameView", "Move success= " + success);
 		marked = 0;
-		
-		checkMoveResult(pressedPoint,player);
+
+		checkMoveResult(pressedPoint, player);
 	}
 
-	private void checkMoveResult(int pressedPoint,int player) {
+	/**
+	 * Checks state of the game
+	 * 
+	 * @param pressedPoint
+	 *            Last pressed point
+	 * @param player
+	 *            Last player to make a move
+	 */
+	private void checkMoveResult(int pressedPoint, int player) {
 
-		if(timeToRemoveMarker){
+		if (timeToRemoveMarker) {
 			return; // Nothing changed
 		}
-		
+
 		if (game.remove(pressedPoint)) {
 			Log.d("GameView", "TimeToRemoveMarker set to true");
 			timeToRemoveMarker = true;
+		} else {
+			Log.d("GameView", "TimeToRemoveMarker stays at "
+					+ timeToRemoveMarker);
 		}
-		else{
-			Log.d("GameView", "TimeToRemoveMarker stays at "+timeToRemoveMarker);
-		}
-		
+
 		int opponent;
-		if(player==RED_MOVES){
-			opponent=BLUE_MOVES;
+		if (player == RED_MOVES) {
+			opponent = BLUE_MOVES;
+		} else {
+			opponent = RED_MOVES;
 		}
-		else{
-			opponent=RED_MOVES;
-		}
-		if(!game.canMove(opponent)){ // If opponent is unable to move, gameover
-			marked=0;
+		if (!game.canMove(opponent)) { // If opponent is unable to move,
+										// gameover
+			marked = 0;
 			game.setWinner(player);
 			return;
 		}
 
-		
 	}
 
 	@Override
@@ -234,6 +254,9 @@ public class GameView extends View {
 
 	}
 
+	/**
+	 * Creates all rectangles
+	 */
 	private void createRects() {
 		boolean landscape = false;
 		int width = this.getWidth();
