@@ -2,7 +2,6 @@ package com.example.ninemenmorris;
 
 import android.util.Log;
 
-
 /**
  * @author Jonas Wåhslén, jwi@kth.se. Revised by Anders Lindström,
  *         anderslm@kth.se
@@ -25,20 +24,19 @@ public class NineMenMorrisRules {
 	public static final int EMPTY_SPACE = 0;
 	public static final int BLUE_MARKER = 4;
 	public static final int RED_MARKER = 5;
-	public static final int OUT_OF_BOUNDS=1337;
+	public static final int OUT_OF_BOUNDS = 1337;
 
 	public int getTurn() {
 		return turn;
 	}
 
 	public int getMarker(int player) {
-		if(player==BLUE_MOVES){
+		if (player == BLUE_MOVES) {
 			return bluemarker;
-		}
-		else if(player==RED_MOVES){
+		} else if (player == RED_MOVES) {
 			return redmarker;
 		}
-		
+
 		try {
 			throw new Exception("Invalid player");
 		} catch (Exception e) {
@@ -72,12 +70,12 @@ public class NineMenMorrisRules {
 				/* else */
 				if (gameplan[To] == EMPTY_SPACE) {
 					boolean valid = isValidMove(To, From);
-					if(gameplan[From]==BLUE_MARKER){
+					if (gameplan[From] == BLUE_MARKER) {
 						return false;
 					}
 					if (valid == true) {
 						gameplan[To] = RED_MARKER;
-						gameplan[From]=EMPTY_SPACE;
+						gameplan[From] = EMPTY_SPACE;
 						turn = BLUE_MOVES;
 						return true;
 					} else {
@@ -97,12 +95,12 @@ public class NineMenMorrisRules {
 				}
 				if (gameplan[To] == EMPTY_SPACE) {
 					boolean valid = isValidMove(To, From);
-					if(gameplan[From]==RED_MARKER){
+					if (gameplan[From] == RED_MARKER) {
 						return false;
 					}
 					if (valid == true) {
 						gameplan[To] = BLUE_MARKER;
-						gameplan[From]=EMPTY_SPACE;
+						gameplan[From] = EMPTY_SPACE;
 						turn = RED_MOVES;
 						return true;
 					} else {
@@ -186,8 +184,9 @@ public class NineMenMorrisRules {
 			return false;
 	}
 
-	/** DEPRECATED
-	 * Returns true if the selected player have less than three markerss left.
+	/**
+	 * DEPRECATED Returns true if the selected player have less than three
+	 * markerss left.
 	 */
 	public boolean win(int color) {
 		int countMarker = 0;
@@ -197,40 +196,226 @@ public class NineMenMorrisRules {
 				countMarker++;
 			count++;
 		}
-		if (bluemarker <= 0 && redmarker <= 0 && countMarker < 3){
-			Log.d("NMMR win", color+ "true");
-			return true;}
-		else{
-			Log.d("NMMR win", color+ "false");
-			return false;}
+		if (bluemarker <= 0 && redmarker <= 0 && countMarker < 3) {
+			Log.d("NMMR win", color + "true");
+			return true;
+		} else {
+			Log.d("NMMR win", color + "false");
+			return false;
+		}
 	}
-	
+
 	/**
 	 * Returns true if the selected player have less than three markerss left.
 	 */
+
+	public boolean canMove(int player) {
+		int playerMarker = RED_MARKER;
+		if (player == BLUE_MOVES) {
+			if (bluemarker > 0) {
+				return true;
+			}
+			playerMarker = BLUE_MARKER;
+		}
+		else{
+			if(redmarker>0){
+				return true;
+			}
+		}
+
+		for (int i = 1; i <= 24; i++) { // For every point
+
+			if (gameplan[i] == playerMarker) {
+				switch (i) {
+				case 1:
+					if (gameplan[22] == EMPTY_SPACE
+							|| gameplan[4] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 2:
+					if (gameplan[23] == EMPTY_SPACE
+							|| gameplan[5] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 3:
+					if (gameplan[24] == EMPTY_SPACE
+							|| gameplan[6] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 4:
+					if (gameplan[1] == EMPTY_SPACE
+							|| gameplan[5] == EMPTY_SPACE
+							|| gameplan[7] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 5:
+					if (gameplan[4] == EMPTY_SPACE
+							|| gameplan[6] == EMPTY_SPACE
+							|| gameplan[2] == EMPTY_SPACE
+							|| gameplan[8] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 6:
+					if (gameplan[3] == EMPTY_SPACE
+							|| gameplan[9] == EMPTY_SPACE
+							|| gameplan[5] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 7:
+					if (gameplan[4] == EMPTY_SPACE
+							|| gameplan[13] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 8:
+					if (gameplan[5] == EMPTY_SPACE
+							|| gameplan[11] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 9:
+					if (gameplan[6] == EMPTY_SPACE
+							|| gameplan[12] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 10:
+					if (gameplan[7] == EMPTY_SPACE
+							|| gameplan[13] == EMPTY_SPACE
+							|| gameplan[11] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 11:
+					if (gameplan[10] == EMPTY_SPACE
+							|| gameplan[8] == EMPTY_SPACE
+							|| gameplan[12] == EMPTY_SPACE
+							|| gameplan[14] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 12:
+					if (gameplan[11] == EMPTY_SPACE
+							|| gameplan[9] == EMPTY_SPACE
+							|| gameplan[15] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 13:
+					if (gameplan[16] == EMPTY_SPACE
+							|| gameplan[10] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 14:
+					if (gameplan[11] == EMPTY_SPACE
+							|| gameplan[17] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 15:
+					if (gameplan[18] == EMPTY_SPACE
+							|| gameplan[12] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 16:
+					if (gameplan[19] == EMPTY_SPACE
+							|| gameplan[13] == EMPTY_SPACE
+							|| gameplan[17] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 17:
+					if (gameplan[20] == EMPTY_SPACE
+							|| gameplan[16] == EMPTY_SPACE
+							|| gameplan[14] == EMPTY_SPACE
+							|| gameplan[18] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 18:
+					if (gameplan[21] == EMPTY_SPACE
+							|| gameplan[15] == EMPTY_SPACE
+							|| gameplan[17] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 19:
+					if (gameplan[16] == EMPTY_SPACE
+							|| gameplan[22] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 20:
+					if (gameplan[23] == EMPTY_SPACE
+							|| gameplan[17] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 21:
+					if (gameplan[18] == EMPTY_SPACE
+							|| gameplan[24] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 22:
+					if (gameplan[1] == EMPTY_SPACE
+							|| gameplan[19] == EMPTY_SPACE
+							|| gameplan[23] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 23:
+					if (gameplan[24] == EMPTY_SPACE
+							|| gameplan[2] == EMPTY_SPACE
+							|| gameplan[22] == EMPTY_SPACE
+							|| gameplan[20] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				case 24:
+					if (gameplan[23] == EMPTY_SPACE
+							|| gameplan[3] == EMPTY_SPACE
+							|| gameplan[21] == EMPTY_SPACE) {
+						return true;
+					}
+					break;
+				}
+			}
+		}
+
+		return false; // Did not find any legal move
+	}
+
 	public boolean loss(int color) {
-		int marker=BLUE_MARKER;
-		if(color==RED_MOVES){
-			marker=RED_MARKER;
+		int marker = BLUE_MARKER;
+		if (color == RED_MOVES) {
+			marker = RED_MARKER;
 		}
-		
-		if(color==BLUE_MOVES&&bluemarker>0){ // Cannot lose if markers left
+
+		if (color == BLUE_MOVES && bluemarker > 0) { // Cannot lose if markers
+														// left
 			return false;
 		}
-		if(color==RED_MOVES&&redmarker>0){
+		if (color == RED_MOVES && redmarker > 0) {
 			return false;
 		}
-			
-			
-			
-		int counter=0;
-		for(int i=1;i<=24;i++){
-			if(gameplan[i]==marker){
+
+		int counter = 0;
+		for (int i = 1; i <= 24; i++) {
+			if (gameplan[i] == marker) {
 				counter++;
 			}
 		}
-		
-		return (counter<3);
+
+		return (counter < 3);
 	}
 
 	/**
@@ -247,8 +432,8 @@ public class NineMenMorrisRules {
 
 		if (this.gameplan[to] != EMPTY_SPACE)
 			return false;
-		
-		if(from==OUT_OF_BOUNDS){
+
+		if (from == OUT_OF_BOUNDS) {
 			return true;
 		}
 

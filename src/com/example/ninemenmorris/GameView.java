@@ -87,7 +87,7 @@ public class GameView extends View {
 
 		if (marker > 0) { // If player has unplaced markers
 			success = game.legalMove(pressedPoint, OUT_OF_BOUNDS, player);
-			checkMoveResult(pressedPoint);
+			checkMoveResult(pressedPoint,player);
 			return;
 		}
 
@@ -116,10 +116,10 @@ public class GameView extends View {
 		Log.d("GameView", "Move success= "+success);
 		marked = 0;
 		
-		checkMoveResult(pressedPoint);
+		checkMoveResult(pressedPoint,player);
 	}
 
-	private void checkMoveResult(int pressedPoint) {
+	private void checkMoveResult(int pressedPoint,int player) {
 
 		if (game.remove(pressedPoint)) {
 			Log.d("GameView", "TimeToRemoveMarker set to true");
@@ -127,6 +127,19 @@ public class GameView extends View {
 		}
 		else{
 			Log.d("GameView", "TimeToRemoveMarker stays at "+timeToRemoveMarker);
+		}
+		
+		int opponent;
+		if(player==RED_MOVES){
+			opponent=BLUE_MOVES;
+		}
+		else{
+			opponent=RED_MOVES;
+		}
+		if(!game.canMove(opponent)){ // If opponent is unable to move, gameover
+			marked=0;
+			winner=player;
+			return;
 		}
 
 		
