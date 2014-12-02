@@ -81,6 +81,7 @@ public class GameView extends View {
 				game.setWinner(BLUE_MOVES);
 				Log.d("Winner", "BLUE SET TO WINNER");
 			}
+			checkMoveResult(pressedPoint, player);
 			return;
 		}
 
@@ -120,6 +121,10 @@ public class GameView extends View {
 
 	private void checkMoveResult(int pressedPoint,int player) {
 
+		if(timeToRemoveMarker){
+			return; // Nothing changed
+		}
+		
 		if (game.remove(pressedPoint)) {
 			Log.d("GameView", "TimeToRemoveMarker set to true");
 			timeToRemoveMarker = true;
