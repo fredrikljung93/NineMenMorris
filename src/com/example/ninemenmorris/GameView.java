@@ -11,7 +11,11 @@ import android.view.View;
 
 
 public class GameView extends View {
+	int marked=0;
 	Rect[] points;
+	Rect big;
+	Rect medium;
+	Rect small;
 	
 	public GameView(Context context) {
 		super(context);
@@ -27,7 +31,17 @@ public class GameView extends View {
 		if(event.getAction() == MotionEvent.ACTION_DOWN || 
 				event.getAction() == MotionEvent.ACTION_UP) {
 			
-			// Skärmen är tryckt. Do stuff
+			boolean pressedPoint=false;
+			for(int i=1;i<=24;i++){
+				if(points[i].contains((int)event.getX(), (int)event.getY())){
+					marked=i;
+					pressedPoint=true;
+					break;
+				}
+			}
+			if(!pressedPoint){
+				marked=0;
+			}
 			invalidate(); // RIta om
 			return true;
 		}
@@ -36,6 +50,12 @@ public class GameView extends View {
 	}
 	@Override
 	protected void onDraw(Canvas canvas) { // Definiera vad som ska ritas
+		if(points[1]==null){
+			createRects();
+		}
+		if(points[1].isEmpty()){
+			createRects();
+		}
 		
 		Log.i("TouchView.onDraw", "");
 		
@@ -55,7 +75,29 @@ public class GameView extends View {
 		Paint darkGrayPaint = new Paint();
 		darkGrayPaint.setColor(Color.DKGRAY);
 		
+		Paint magentaPaint = new Paint();
+		magentaPaint.setColor(Color.MAGENTA);
+		canvas.drawRect(big,bluePaint);
+		canvas.drawRect(medium,greenPaint);
+		canvas.drawRect(small,redPaint);
 		
+		
+		
+		for(int i=1;i<=24;i++){
+			if(points[i]!=null){
+				if(marked==i){
+				canvas.drawRect(points[i], magentaPaint);
+				}
+				else{
+					canvas.drawRect(points[i], darkGrayPaint);
+				}
+			}
+		}
+
+	}
+	
+	private void createRects(){
+
 		int width=this.getWidth();
 		if(this.getHeight()<width){
 			width=this.getHeight();
@@ -64,19 +106,11 @@ public class GameView extends View {
 		int bottom=width;
 		int left=0;
 		int right=width;
-		
-		
 		int smallWidth=width/3;
-		Rect big=new Rect(left, top, right, bottom);
-		Rect medium=new Rect(smallWidth/2, smallWidth/2, (width-smallWidth)+(smallWidth/2), (width-smallWidth)+(smallWidth/2));
-		Rect small=new Rect(smallWidth, smallWidth, width-smallWidth, width-smallWidth);
-		
-		canvas.drawRect(big,bluePaint);
-		canvas.drawRect(medium,greenPaint);
-		canvas.drawRect(small,redPaint);
-		
+		big=new Rect(left, top, right, bottom);
+		medium=new Rect(smallWidth/2, smallWidth/2, (width-smallWidth)+(smallWidth/2), (width-smallWidth)+(smallWidth/2));
+		small=new Rect(smallWidth, smallWidth, width-smallWidth, width-smallWidth);
 		int pointWidth=smallWidth/4;
-		
 		points[1]=new Rect(small.left, small.top, small.left+pointWidth, small.top+pointWidth);
 		points[2]=new Rect(medium.left, medium.top, medium.left+pointWidth, medium.top+pointWidth);
 		points[3]=new Rect(big.left, big.top, big.left+pointWidth,big.top+pointWidth);
@@ -104,12 +138,6 @@ public class GameView extends View {
 		points[22]=new Rect(small.left, small.top+(small.height()/2)-(pointWidth/2), small.left+pointWidth,small.top+(small.height()/2)-(pointWidth/2)+pointWidth);
 		points[23]=new Rect(medium.left, medium.top+(medium.height()/2)-(pointWidth/2), medium.left+pointWidth,medium.top+(medium.height()/2)-(pointWidth/2)+pointWidth);
 		points[24]=new Rect(big.left, big.top+(big.height()/2)-(pointWidth/2), big.left+pointWidth,big.top+(big.height()/2)-(pointWidth/2)+pointWidth);
-		for(int i=1;i<=24;i++){
-			if(points[i]!=null){
-				canvas.drawRect(points[i], darkGrayPaint);
-			}
-		}
-
 	}
 
 }
