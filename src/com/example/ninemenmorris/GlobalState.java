@@ -5,13 +5,17 @@ import android.app.Application;
 public class GlobalState extends Application {
 	private NineMenMorrisRules game;
 	public GlobalState(){
-		setGame(new NineMenMorrisRules());
+		this.game=new NineMenMorrisRules();
 	}
-	public NineMenMorrisRules getGame() {
+	public NineMenMorrisRules getCurrentGame() {
 		return game;
 	}
-	public void setGame(NineMenMorrisRules game) {
-		this.game = game;
+	
+	public NineMenMorrisRules newGame() {
+		this.game = new NineMenMorrisRules();
+		return game;
 	}
+	
+	
 
 }
