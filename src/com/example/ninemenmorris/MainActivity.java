@@ -14,4 +14,10 @@ public class MainActivity extends Activity {
         view.setNineMenMorrisRules(game);
         setContentView(view);
     }
+    
+    @Override
+    public void onResume(){
+    	super.onResume();
+    	//TODO FIXA SÅ MAN KAN VÄNDA SKÄRMEN UTAN ATT SPELET BÖRJAR OM
+    }
 }

@@ -1,6 +1,5 @@
 package com.example.ninemenmorris;
 
-import android.widget.TextView;
 
 /**
  * @author Jonas Wåhslén, jwi@kth.se. Revised by Anders Lindström,

@@ -10,7 +10,7 @@ import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-
+import android.os.Vibrator;
 public class GameView extends View {
 	public static final int BLUE_MOVES = 1;
 	public static final int RED_MOVES = 2;
@@ -18,6 +18,7 @@ public class GameView extends View {
 	public static final int EMPTY_SPACE = 0;
 	public static final int BLUE_MARKER = 4;
 	public static final int RED_MARKER = 5;
+	Vibrator v;
 	NineMenMorrisRules game;
 	int marked = 0;
 	Rect[] points;
@@ -31,15 +32,14 @@ public class GameView extends View {
 		super(context);
 		// TODO Auto-generated constructor stub
 		points = new Rect[25];
+		v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		Log.i("TouchView.onTouchEvent", "event = " + event);
 
-		if (event.getAction() == MotionEvent.ACTION_DOWN
-				|| event.getAction() == MotionEvent.ACTION_UP) {
-
+		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			boolean pressedPoint = false;
 			for (int i = 1; i <= 24; i++) {
 				if (points[i].contains((int) event.getX(), (int) event.getY())) {
@@ -48,7 +48,10 @@ public class GameView extends View {
 					break;
 				}
 			}
-			if (!pressedPoint) {
+			if(pressedPoint){
+				 v.vibrate(50);
+			}
+			else{
 				marked = 0;
 			}
 			invalidate(); // RIta om
@@ -121,7 +124,13 @@ public class GameView extends View {
 			}
 		}
 		blackPaint.setTextSize(30);
-		canvas.drawText(message, notGamePlan.left, notGamePlan.centerY(), blackPaint);
+		int turn=game.getTurn();
+		String turnmessage= "REDS TURN";
+		if(turn==BLUE_MOVES){
+			turnmessage="BLUES TURN";
+		}
+		canvas.drawText(turnmessage, notGamePlan.left, notGamePlan.top+30, blackPaint);
+		canvas.drawText(message, notGamePlan.left, notGamePlan.bottom, blackPaint);
 
 	}
 
