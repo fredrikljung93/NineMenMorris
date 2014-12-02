@@ -61,48 +61,49 @@ public class GameView extends View {
 
 	private void handleTouch(int pressedPoint) {
 		int player = game.getTurn();
+		int playerMatchingMarker = RED_MARKER;
+		if (player == BLUE_MOVES) {
+			playerMatchingMarker = BLUE_MARKER;
+		}
 		int marker = game.getMarker(player);
 		boolean success = false;
 
 		if (timeToRemoveMarker) {
-			switch (player) {
-			case RED_MOVES:
-				success = game.remove(pressedPoint, RED_MARKER);
-				break;
-
-			case BLUE_MOVES:
-				success = game.remove(pressedPoint, BLUE_MARKER);
-				break;
-			}
-
+			success = game.remove(pressedPoint, playerMatchingMarker);
 			timeToRemoveMarker = !success;
 
 			if (game.loss(BLUE_MOVES)) {
 				winner = RED_MOVES;
 				Log.d("Winner", "RED SET TO WINNER");
 			} else if (game.loss(RED_MOVES)) {
-				winner=BLUE_MOVES;
+				winner = BLUE_MOVES;
 				Log.d("Winner", "BLUE SET TO WINNER");
 			}
 			return;
 		}
 
-		if (marker > 0) {
+		if (marker > 0) { // If player has unplaced markers
 			success = game.legalMove(pressedPoint, OUT_OF_BOUNDS, player);
 		}
 
-		if (marked == 0) {
+		if (marked == 0) { // If no point has been marked, mark it
 			marked = pressedPoint;
 			return;
-		} else {
-			if (marked == pressedPoint) {
-				marked = 0;
-				return;
-			}
-
-			success = game.legalMove(pressedPoint, marked, player);
-			marked = 0;
 		}
+
+		if (marked == pressedPoint) { // If player touches marked point, unmark it
+			marked = 0;
+			return;
+		}
+		
+		if(!(game.board(marked)==playerMatchingMarker)){ // If naughty move
+			Log.d("NAUGHTYMOVE", "Pressed "+pressedPoint+" with "+marked+ " marked as player "+player);
+			marked=0;
+			return;
+		}
+
+		success = game.legalMove(pressedPoint, marked, player);
+		marked = 0;
 
 		if (game.remove(pressedPoint)) {
 			timeToRemoveMarker = true;
