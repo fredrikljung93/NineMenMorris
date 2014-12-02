@@ -96,10 +96,14 @@ public class GameView extends View {
 			return;
 		}
 		
-		if(!(game.board(marked)==playerMatchingMarker)){ // If naughty move
+		if(!(game.board(marked)==playerMatchingMarker)){ // If try to move opponents points
 			Log.d("NAUGHTYMOVE", "Pressed "+pressedPoint+" with "+marked+ " marked as player "+player);
 			marked=0;
 			return;
+		}
+		if(game.board(pressedPoint)!=EMPTY_SPACE){ // If try to move where there already is a marker
+			Log.d("NAUGHTYMOVE", "Pressed "+pressedPoint+" with "+marked+ " marked as player "+player);
+			marked=0;
 		}
 
 		success = game.legalMove(pressedPoint, marked, player);
