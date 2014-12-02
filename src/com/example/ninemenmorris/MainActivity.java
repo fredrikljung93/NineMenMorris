@@ -9,15 +9,17 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        game = new NineMenMorrisRules();
+        GlobalState globalState = (GlobalState) this.getApplication();
         GameView view = new GameView(this);
-        view.setNineMenMorrisRules(game);
+        view.setNineMenMorrisRules(globalState.getGame());
         setContentView(view);
     }
     
     @Override
     public void onResume(){
     	super.onResume();
-    	//TODO FIXA SÅ MAN KAN VÄNDA SKÄRMEN UTAN ATT SPELET BÖRJAR OM
+        GlobalState globalState = (GlobalState) this.getApplication();
+    	 GameView view = new GameView(this);
+         view.setNineMenMorrisRules(globalState.getGame());
     }
 }
