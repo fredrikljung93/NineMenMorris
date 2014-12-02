@@ -40,6 +40,9 @@ public class GameView extends View {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+		if(winner!=0){ // Do nothing if winner is annonced
+			return false;
+		}
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			boolean pressedPoint = false;
 			for (int i = 1; i <= 24; i++) {
@@ -84,6 +87,8 @@ public class GameView extends View {
 
 		if (marker > 0) { // If player has unplaced markers
 			success = game.legalMove(pressedPoint, OUT_OF_BOUNDS, player);
+			checkMoveResult(pressedPoint);
+			return;
 		}
 
 		if (marked == 0) { // If no point has been marked, mark it
@@ -108,12 +113,23 @@ public class GameView extends View {
 		}
 
 		success = game.legalMove(pressedPoint, marked, player);
+		Log.d("GameView", "Move success= "+success);
 		marked = 0;
+		
+		checkMoveResult(pressedPoint);
+	}
+
+	private void checkMoveResult(int pressedPoint) {
 
 		if (game.remove(pressedPoint)) {
+			Log.d("GameView", "TimeToRemoveMarker set to true");
 			timeToRemoveMarker = true;
 		}
+		else{
+			Log.d("GameView", "TimeToRemoveMarker stays at "+timeToRemoveMarker);
+		}
 
+		
 	}
 
 	@Override

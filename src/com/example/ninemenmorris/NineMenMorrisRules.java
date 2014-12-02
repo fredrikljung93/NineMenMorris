@@ -213,6 +213,16 @@ public class NineMenMorrisRules {
 		if(color==RED_MOVES){
 			marker=RED_MARKER;
 		}
+		
+		if(color==BLUE_MOVES&&bluemarker>0){ // Cannot lose if markers left
+			return false;
+		}
+		if(color==RED_MOVES&&redmarker>0){
+			return false;
+		}
+			
+			
+			
 		int counter=0;
 		for(int i=1;i<=24;i++){
 			if(gameplan[i]==marker){
