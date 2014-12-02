@@ -17,6 +17,7 @@ public class NineMenMorrisRules {
 	private int[] gameplan;
 	private int bluemarker, redmarker;
 	private int turn; // player in turn
+	private int winner;
 
 	public static final int BLUE_MOVES = 1;
 	public static final int RED_MOVES = 2;
@@ -51,6 +52,7 @@ public class NineMenMorrisRules {
 		bluemarker = 9;
 		redmarker = 9;
 		turn = RED_MOVES;
+		setWinner(0);
 	}
 
 	/**
@@ -488,5 +490,13 @@ public class NineMenMorrisRules {
 			return (from == 3 || from == 21 || from == 23);
 		}
 		return false;
+	}
+
+	public int getWinner() {
+		return winner;
+	}
+
+	public void setWinner(int winner) {
+		this.winner = winner;
 	}
 }

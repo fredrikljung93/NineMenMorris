@@ -20,7 +20,6 @@ public class GameView extends View {
 	public static final int BLUE_MARKER = 4;
 	public static final int RED_MARKER = 5;
 	boolean timeToRemoveMarker = false;
-	int winner = 0;
 	int marked = 0;
 	Vibrator v;
 	NineMenMorrisRules game;
@@ -40,7 +39,7 @@ public class GameView extends View {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		if(winner!=0){ // Do nothing if winner is annonced
+		if(game.getWinner()!=0){ // Do nothing if winner is annonced
 			return false;
 		}
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -76,10 +75,10 @@ public class GameView extends View {
 			timeToRemoveMarker = !success;
 
 			if (game.loss(BLUE_MOVES)) {
-				winner = RED_MOVES;
+				game.setWinner(RED_MOVES);
 				Log.d("Winner", "RED SET TO WINNER");
 			} else if (game.loss(RED_MOVES)) {
-				winner = BLUE_MOVES;
+				game.setWinner(BLUE_MOVES);
 				Log.d("Winner", "BLUE SET TO WINNER");
 			}
 			return;
@@ -138,7 +137,7 @@ public class GameView extends View {
 		}
 		if(!game.canMove(opponent)){ // If opponent is unable to move, gameover
 			marked=0;
-			winner=player;
+			game.setWinner(player);
 			return;
 		}
 
@@ -218,9 +217,9 @@ public class GameView extends View {
 				break;
 			}
 		}
-		if (winner == BLUE_MOVES) {
+		if (game.getWinner() == BLUE_MOVES) {
 			turnmessage = "BLUE WON THE GAME";
-		} else if (winner == RED_MOVES) {
+		} else if (game.getWinner() == RED_MOVES) {
 			turnmessage = "RED WON THE GAME";
 		}
 		canvas.drawText(turnmessage, notGamePlan.left, notGamePlan.top + 30,
