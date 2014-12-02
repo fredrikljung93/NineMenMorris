@@ -78,7 +78,9 @@ public class GameView extends View {
 
 		if (timeToRemoveMarker) {
 			success = game.remove(pressedPoint, playerMatchingMarker);
+			Log.d("Remove", "Removing successful="+true);
 			timeToRemoveMarker = !success;
+			Log.d("Remove", "TimeToRemoveMarker therefore= "+success);
 
 			if (game.tooFewMarkers(BLUE_MOVES)) {
 				game.setWinner(RED_MOVES);
@@ -87,7 +89,7 @@ public class GameView extends View {
 				game.setWinner(BLUE_MOVES);
 				Log.d("Winner", "BLUE SET TO WINNER");
 			}
-			checkMoveResult(pressedPoint, player);
+			checkMoveResult(0, player);
 			return;
 		}
 
