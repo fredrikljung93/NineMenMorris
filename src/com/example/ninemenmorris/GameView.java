@@ -12,6 +12,13 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class GameView extends View {
+	public static final int BLUE_MOVES = 1;
+	public static final int RED_MOVES = 2;
+	public static final int OUT_OF_BOUNDS=1337;
+	public static final int EMPTY_SPACE = 0;
+	public static final int BLUE_MARKER = 4;
+	public static final int RED_MARKER = 5;
+	NineMenMorrisRules game;
 	int marked = 0;
 	Rect[] points;
 	Rect notGamePlan;
@@ -19,7 +26,7 @@ public class GameView extends View {
 	Rect medium;
 	Rect small;
 	ArrayList<Rect> lines;
-	String message="Hello";
+	String message="Game not loaded";
 	public GameView(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
@@ -36,7 +43,7 @@ public class GameView extends View {
 			boolean pressedPoint = false;
 			for (int i = 1; i <= 24; i++) {
 				if (points[i].contains((int) event.getX(), (int) event.getY())) {
-					marked = i;
+					handleTouch(i);
 					pressedPoint = true;
 					break;
 				}
@@ -49,6 +56,19 @@ public class GameView extends View {
 		}
 
 		return false;
+	}
+
+	private void handleTouch(int pressedPoint) {
+		int player = game.getTurn();
+		int marker = game.getMarker(player);
+		
+		if(marker>0){
+			boolean success=game.legalMove(pressedPoint,OUT_OF_BOUNDS, player);
+			if(true){
+				message="OTHER PLAYERS TURN";
+			}
+		}
+		
 	}
 
 	@Override
@@ -65,6 +85,12 @@ public class GameView extends View {
 		// Background
 		Paint blackPaint = new Paint();
 		blackPaint.setColor(Color.BLACK);
+		
+		Paint redPaint = new Paint();
+		redPaint.setColor(Color.RED);
+		
+		Paint bluePaint = new Paint();
+		bluePaint.setColor(Color.BLUE);
 
 		Paint darkGreenPaint = new Paint();
 		darkGreenPaint.setColor(Color.argb(255, 0,130, 0));
@@ -82,12 +108,16 @@ public class GameView extends View {
 		}
 
 		for (int i = 1; i <= 24; i++) {
-			if (points[i] != null) {
-				if (marked == i) {
-					canvas.drawRect(points[i], magentaPaint);
-				} else {
-					canvas.drawRect(points[i], darkGrayPaint);
-				}
+			int point = game.board(i);
+			switch(point){
+			case RED_MARKER:
+				canvas.drawRect(points[i], redPaint);
+				break;
+			case BLUE_MARKER:
+				canvas.drawRect(points[i], bluePaint);
+				break;
+			default:
+				canvas.drawRect(points[i], darkGrayPaint);
 			}
 		}
 		blackPaint.setTextSize(30);
@@ -249,6 +279,20 @@ public class GameView extends View {
 				- (lineWidth / 2), points[15].centerX(), points[15].centerY()
 				+ (lineWidth / 2)));
 
+	}
+
+	public void setNineMenMorrisRules(NineMenMorrisRules game) {
+		this.game=game;
+		String turn = null;
+		switch(game.getTurn()){
+		case RED_MOVES:
+			turn="RED";
+		break;
+		
+		case BLUE_MOVES:
+			turn="BLUE";
+		}
+		this.message=turn+"'S TURN";
 	}
 
 }

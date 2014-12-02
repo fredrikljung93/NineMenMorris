@@ -3,28 +3,20 @@ package com.example.ninemenmorris;
 import android.widget.TextView;
 
 /**
- * @author Jonas Wåhslén, jwi@kth.se. 
- * Revised by Anders Lindström, anderslm@kth.se
+ * @author Jonas Wåhslén, jwi@kth.se. Revised by Anders Lindström,
+ *         anderslm@kth.se
  */
 
 /*
  * The game board positions
- *
- * 03           06           09
- *     02       05       08
- *         01   04   07
- * 24  23  22        10  11  12
- *         19   16   13
- *     20       17       14
- * 21           18           15
  * 
+ * 03 06 09 02 05 08 01 04 07 24 23 22 10 11 12 19 16 13 20 17 14 21 18 15
  */
 
 public class NineMenMorrisRules {
 	private int[] gameplan;
 	private int bluemarker, redmarker;
 	private int turn; // player in turn
-	
 
 	public static final int BLUE_MOVES = 1;
 	public static final int RED_MOVES = 2;
@@ -32,6 +24,28 @@ public class NineMenMorrisRules {
 	public static final int EMPTY_SPACE = 0;
 	public static final int BLUE_MARKER = 4;
 	public static final int RED_MARKER = 5;
+	public static final int OUT_OF_BOUNDS=1337;
+
+	public int getTurn() {
+		return turn;
+	}
+
+	public int getMarker(int player) {
+		if(player==BLUE_MOVES){
+			return bluemarker;
+		}
+		else if(player==RED_MOVES){
+			return redmarker;
+		}
+		
+		try {
+			throw new Exception("Invalid player");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return -1;
+	}
 
 	public NineMenMorrisRules() {
 		gameplan = new int[25]; // zeroes
@@ -54,7 +68,7 @@ public class NineMenMorrisRules {
 						return true;
 					}
 				}
-				/*else*/
+				/* else */
 				if (gameplan[To] == EMPTY_SPACE) {
 					boolean valid = isValidMove(To, From);
 					if (valid == true) {
@@ -114,7 +128,7 @@ public class NineMenMorrisRules {
 		} else if ((to == 8 || to == 11 || to == 14)
 				&& gameplan[8] == gameplan[11] && gameplan[11] == gameplan[14]) {
 			return true;
-		} else if ((to == 9 || to == 12 || to == 15) 
+		} else if ((to == 9 || to == 12 || to == 15)
 				&& gameplan[9] == gameplan[12] && gameplan[12] == gameplan[15]) {
 			return true;
 		} else if ((to == 13 || to == 16 || to == 19)
@@ -152,8 +166,8 @@ public class NineMenMorrisRules {
 	}
 
 	/**
-	 * Request to remove a marker for the selected player.
-	 * Returns true if the marker where successfully removed
+	 * Request to remove a marker for the selected player. Returns true if the
+	 * marker where successfully removed
 	 */
 	public boolean remove(int From, int color) {
 		if (gameplan[From] == color) {
@@ -164,7 +178,7 @@ public class NineMenMorrisRules {
 	}
 
 	/**
-	 *  Returns true if the selected player have less than three markerss left.
+	 * Returns true if the selected player have less than three markerss left.
 	 */
 	public boolean win(int color) {
 		int countMarker = 0;
@@ -186,14 +200,19 @@ public class NineMenMorrisRules {
 	public int board(int From) {
 		return gameplan[From];
 	}
-	
+
 	/**
 	 * Check whether this is a legal move.
 	 */
 	private boolean isValidMove(int to, int from) {
+
+		if (this.gameplan[to] != EMPTY_SPACE)
+			return false;
 		
-		if (this.gameplan[to] != EMPTY_SPACE) return false;
-		
+		if(from==OUT_OF_BOUNDS){
+			return true;
+		}
+
 		switch (to) {
 		case 1:
 			return (from == 4 || from == 22);
