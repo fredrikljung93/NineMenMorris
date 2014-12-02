@@ -59,7 +59,7 @@ public class NineMenMorrisRules {
 	public boolean legalMove(int To, int From, int color) {
 		if (color == turn) {
 			if (turn == RED_MOVES) {
-				if (redmarker >= 0) {
+				if (redmarker > 0) {
 					if (gameplan[To] == EMPTY_SPACE) {
 						gameplan[To] = RED_MARKER;
 						redmarker--;
@@ -70,8 +70,12 @@ public class NineMenMorrisRules {
 				/* else */
 				if (gameplan[To] == EMPTY_SPACE) {
 					boolean valid = isValidMove(To, From);
+					if(gameplan[From]==BLUE_MARKER){
+						return false;
+					}
 					if (valid == true) {
 						gameplan[To] = RED_MARKER;
+						gameplan[From]=EMPTY_SPACE;
 						turn = BLUE_MOVES;
 						return true;
 					} else {
@@ -80,8 +84,8 @@ public class NineMenMorrisRules {
 				} else {
 					return false;
 				}
-			} else {
-				if (bluemarker >= 0) {
+			} else { // TURN == BLUE MOVES
+				if (bluemarker > 0) {
 					if (gameplan[To] == EMPTY_SPACE) {
 						gameplan[To] = BLUE_MARKER;
 						bluemarker--;
@@ -91,8 +95,12 @@ public class NineMenMorrisRules {
 				}
 				if (gameplan[To] == EMPTY_SPACE) {
 					boolean valid = isValidMove(To, From);
+					if(gameplan[From]==RED_MARKER){
+						return false;
+					}
 					if (valid == true) {
 						gameplan[To] = BLUE_MARKER;
+						gameplan[From]=EMPTY_SPACE;
 						turn = RED_MOVES;
 						return true;
 					} else {

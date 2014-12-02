@@ -18,16 +18,16 @@ public class GameView extends View {
 	public static final int EMPTY_SPACE = 0;
 	public static final int BLUE_MARKER = 4;
 	public static final int RED_MARKER = 5;
+	boolean timeToRemoveMarker=false;
+	int marked=0;
 	Vibrator v;
 	NineMenMorrisRules game;
-	int marked = 0;
 	Rect[] points;
 	Rect notGamePlan;
 	Rect big;
 	Rect medium;
 	Rect small;
 	ArrayList<Rect> lines;
-	String message="Game not loaded";
 	public GameView(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
@@ -51,9 +51,6 @@ public class GameView extends View {
 			if(pressedPoint){
 				 v.vibrate(50);
 			}
-			else{
-				marked = 0;
-			}
 			invalidate(); // RIta om
 			return true;
 		}
@@ -64,12 +61,45 @@ public class GameView extends View {
 	private void handleTouch(int pressedPoint) {
 		int player = game.getTurn();
 		int marker = game.getMarker(player);
+		boolean success=false;
+		
+		if(timeToRemoveMarker){
+			switch(player){
+			case RED_MOVES:
+				success=game.remove(pressedPoint, RED_MARKER);
+				break;
+				
+			case BLUE_MOVES:
+				success=game.remove(pressedPoint, BLUE_MARKER);
+				break;
+			}
+			
+			timeToRemoveMarker=!success;
+			return;
+		}
 		
 		if(marker>0){
-			boolean success=game.legalMove(pressedPoint,OUT_OF_BOUNDS, player);
-			if(true){
-				message="OTHER PLAYERS TURN";
+			success=game.legalMove(pressedPoint,OUT_OF_BOUNDS, player);
+		}
+		
+		if(marked==0){
+			marked=pressedPoint;
+			return;
+		}
+		else{
+			if(marked==pressedPoint){
+				marked=0;
+				return;
 			}
+			
+			success=game.legalMove(pressedPoint, marked, player);
+			marked=0;
+		}
+		
+		
+		
+		if(game.remove(pressedPoint)){
+			timeToRemoveMarker=true;
 		}
 		
 	}
@@ -88,6 +118,10 @@ public class GameView extends View {
 		// Background
 		Paint blackPaint = new Paint();
 		blackPaint.setColor(Color.BLACK);
+		
+		Paint markedBorder = new Paint();
+		markedBorder.setColor(Color.MAGENTA);
+		markedBorder.setStyle(Paint.Style.STROKE);
 		
 		Paint redPaint = new Paint();
 		redPaint.setColor(Color.RED);
@@ -122,6 +156,9 @@ public class GameView extends View {
 			default:
 				canvas.drawRect(points[i], darkGrayPaint);
 			}
+			if(marked==i){
+				canvas.drawRect(points[i],markedBorder);
+			}
 		}
 		blackPaint.setTextSize(30);
 		int turn=game.getTurn();
@@ -129,8 +166,19 @@ public class GameView extends View {
 		if(turn==BLUE_MOVES){
 			turnmessage="BLUES TURN";
 		}
+		String statistics="R: "+game.getMarker(RED_MOVES)+", B: "+game.getMarker(BLUE_MOVES);
+		if(timeToRemoveMarker){
+			switch(turn){
+			case BLUE_MOVES:
+				turnmessage="RED, REMOVE A BLUE MARKER";
+				break;
+			case RED_MOVES:
+				turnmessage="BLUE, REMOVE A RED MARKER";
+				break;
+			}
+		}
 		canvas.drawText(turnmessage, notGamePlan.left, notGamePlan.top+30, blackPaint);
-		canvas.drawText(message, notGamePlan.left, notGamePlan.bottom, blackPaint);
+		canvas.drawText(statistics, notGamePlan.left, notGamePlan.bottom, blackPaint);
 
 	}
 
@@ -292,16 +340,6 @@ public class GameView extends View {
 
 	public void setNineMenMorrisRules(NineMenMorrisRules game) {
 		this.game=game;
-		String turn = null;
-		switch(game.getTurn()){
-		case RED_MOVES:
-			turn="RED";
-		break;
-		
-		case BLUE_MOVES:
-			turn="BLUE";
-		}
-		this.message=turn+"'S TURN";
 	}
 
 }
