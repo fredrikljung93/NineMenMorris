@@ -104,6 +104,7 @@ public class GameView extends View {
 		if(game.board(pressedPoint)!=EMPTY_SPACE){ // If try to move where there already is a marker
 			Log.d("NAUGHTYMOVE", "Pressed "+pressedPoint+" with "+marked+ " marked as player "+player);
 			marked=0;
+			return;
 		}
 
 		success = game.legalMove(pressedPoint, marked, player);
