@@ -7,27 +7,26 @@ import android.view.MenuItem;
 
 public class MainActivity extends Activity {
 
-	GameView view;
-	GlobalState globalState;
+	private GameView view;
+	private GlobalState globalState;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		view = new GameView(this);
-		globalState = (GlobalState) this.getApplication();
+
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
+
+		globalState = (GlobalState) this.getApplication();
 		view.setNineMenMorrisRules(globalState.getCurrentGame());
 		setContentView(view);
 	}
 
-    
-   
-    
-    @Override
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
