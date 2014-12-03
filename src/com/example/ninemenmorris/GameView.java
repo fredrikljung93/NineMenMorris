@@ -37,13 +37,12 @@ public class GameView extends View {
 	Paint darkGrayPaint = new Paint();
 	Paint magentaPaint = new Paint();
 
-
 	public GameView(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
 		points = new Rect[25];
 		v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-		
+
 		blackPaint.setColor(Color.BLACK);
 		markedBorder.setColor(Color.MAGENTA);
 		markedBorder.setStyle(Paint.Style.STROKE);
@@ -96,9 +95,9 @@ public class GameView extends View {
 
 		if (timeToRemoveMarker) {
 			success = game.remove(pressedPoint, playerMatchingMarker);
-			Log.d("Remove", "Removing successful="+true);
+			Log.d("Remove", "Removing successful=" + true);
 			timeToRemoveMarker = !success;
-			Log.d("Remove", "TimeToRemoveMarker therefore= "+success);
+			Log.d("Remove", "TimeToRemoveMarker therefore= " + success);
 
 			if (game.tooFewMarkers(BLUE_MOVES)) {
 				game.setWinner(RED_MOVES);
@@ -107,13 +106,13 @@ public class GameView extends View {
 				game.setWinner(BLUE_MOVES);
 				Log.d("Winner", "BLUE SET TO WINNER");
 			}
-			checkMoveResult(0, player);
+			checkMoveResult(0);
 			return;
 		}
 
 		if (marker > 0) { // If player has unplaced markers
 			success = game.legalMove(pressedPoint, OUT_OF_BOUNDS, player);
-			checkMoveResult(pressedPoint, player);
+			checkMoveResult(pressedPoint);
 			return;
 		}
 
@@ -149,7 +148,7 @@ public class GameView extends View {
 		Log.d("GameView", "Move success= " + success);
 		marked = 0;
 
-		checkMoveResult(pressedPoint, player);
+		checkMoveResult(pressedPoint);
 	}
 
 	/**
@@ -160,7 +159,7 @@ public class GameView extends View {
 	 * @param player
 	 *            Last player to make a move
 	 */
-	private void checkMoveResult(int pressedPoint, int player) {
+	private void checkMoveResult(int pressedPoint) {
 
 		if (timeToRemoveMarker) {
 			return; // Nothing changed
@@ -174,16 +173,13 @@ public class GameView extends View {
 					+ timeToRemoveMarker);
 		}
 
-		int opponent;
-		if (player == RED_MOVES) {
-			opponent = BLUE_MOVES;
-		} else {
-			opponent = RED_MOVES;
-		}
-		if (!game.canMove(opponent)) { // If opponent is unable to move,
-										// gameover
+		if (!game.canMove(RED_MOVES)) { // Blue wins if red cannot move
 			marked = 0;
-			game.setWinner(player);
+			game.setWinner(BLUE_MOVES);
+			return;
+		} else if (!game.canMove(BLUE_MOVES)) { // Red wins if blue cannot move
+			marked = 0;
+			game.setWinner(RED_MOVES);
 			return;
 		}
 
