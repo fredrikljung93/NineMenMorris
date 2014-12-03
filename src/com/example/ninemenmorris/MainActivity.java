@@ -10,10 +10,6 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GlobalState globalState = (GlobalState) this.getApplication();
-        GameView view = new GameView(this);
-        view.setNineMenMorrisRules(globalState.getCurrentGame());
-        setContentView(view);
     }
     
     @Override
@@ -22,6 +18,7 @@ public class MainActivity extends Activity {
         GlobalState globalState = (GlobalState) this.getApplication();
     	 GameView view = new GameView(this);
          view.setNineMenMorrisRules(globalState.getCurrentGame());
+         setContentView(view);
     }
     
     @Override
