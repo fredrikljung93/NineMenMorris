@@ -269,7 +269,7 @@ public class NineMenMorrisRules {
 					break;
 				case 7:
 					if (gameplan[4] == EMPTY_SPACE
-							|| gameplan[13] == EMPTY_SPACE) {
+							|| gameplan[10] == EMPTY_SPACE) {
 						return true;
 					}
 					break;
